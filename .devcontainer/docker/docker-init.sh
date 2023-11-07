@@ -38,6 +38,7 @@ Init Step ${1}/${STEP_CNT} [${2}] -- ${3}
 EOF
 }
 ADMIN_PASSWORD="admin"
+export SUPERSET_SECRET_KEY=`openssl rand -base64 42`
 # If Cypress run – overwrite the password for admin and export env variables
 if [ "$CYPRESS_CONFIG" == "true" ]; then
     ADMIN_PASSWORD="general"
@@ -72,7 +73,13 @@ if [ "$SUPERSET_LOAD_EXAMPLES" = "yes" ]; then
         superset load_test_users
         superset load_examples --load-test-data
     else
-        superset load_examples
+        superset load_examples --force
     fi
+    
+    # Load movie examples
+    export PGPASSWORD=superset
+    for file in movie-db/*.sql; do psql -h db -U superset -f $file; done
+
     echo_step "4" "Complete" "Loading examples"
 fi
+
