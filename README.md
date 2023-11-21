@@ -19,8 +19,7 @@ Volgende initialisatiestappen:
   - Display name: `PostgreSQL`
 * Klik Connect en Finish
 
-* Nu kun je je eigen data toevoegen. Maak een bestand aan met een naam die eindigt op `.pgsql`, plak daarin jouw database code (de gereviewde versie van Github) en voer die vervolgens uit met F5 (je kunt database db selecteren).
-Opmerking: normaal gesproken zou je dit doen door de repository van de database opdracht te clonen in de Terminal van je Codespace, alleen moet je dan een nieuw PAT (Personal Access Token) genereren en configureren door een [bug](https://github.com/actions/checkout/issues/779) in Github, en dan wordt het wat ingewikkeld dus we laten dat even zitten.
+* Nu kun je je eventueel eigen data toevoegen. Maak daarvoor een bestand aan met een naam die eindigt op `.pgsql`, en voer die vervolgens uit met F5 (je kunt database db selecteren). Deze stap is optioneel, standaard is als het goed is al de movie voorbeeld data geladen.
 
 * Ga in Superset naar [Data > Datasets](http://127.0.0.1:8088/tablemodelview/list/), klik op + DATASET rechtsboven en selecteer:
   - Database: `PostgreSQL`
