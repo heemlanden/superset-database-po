@@ -15,7 +15,7 @@
 # limitations under the License.
 #
 #x-superset-image: &superset-image apache/superset:${TAG:-latest-dev}
-x-superset-image: &superset-image apache/superset:2.1.1
+x-superset-image: &superset-image apache/superset:3.0.1
 x-superset-depends-on: &superset-depends-on
   - db
   - redis
@@ -75,7 +75,7 @@ services:
     user: "root"
     volumes: *superset-volumes
     healthcheck:
-      test: ["CMD-SHELL", "celery inspect ping -A superset.tasks.celery_app:app -d celery@$$HOSTNAME"]
+      test: ["CMD-SHELL", "celery -A superset.tasks.celery_app:app inspect ping -d celery@$$HOSTNAME"]
 
   superset-worker-beat:
     image: *superset-image

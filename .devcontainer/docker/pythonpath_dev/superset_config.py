@@ -79,6 +79,7 @@ CACHE_CONFIG = {
 }
 DATA_CACHE_CONFIG = CACHE_CONFIG
 
+SUPERSET_SECRET_KEY = get_env_variable("SUPERSET_SECRET_KEY")
 
 class CeleryConfig(object):
     BROKER_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/{REDIS_CELERY_DB}"
