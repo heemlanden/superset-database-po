@@ -27,37 +27,42 @@ x-superset-volumes: &superset-volumes
 version: "3.7"
 services:
   redis:
-    image: redis:7
-    container_name: superset_cache
+    image: redis:latest
     restart: unless-stopped
     volumes:
       - redis:/data
 
   db:
-    env_file: docker/.env-non-dev
-    image: postgres:14
-    container_name: superset_db
+    env_file: docker/.env
+    image: postgres:10
     restart: unless-stopped
     volumes:
       - db_home:/var/lib/postgresql/data
 
+  db-load:
+    env_file: docker/.env
+    image: postgres:10
+    entrypoint: ["/db-entrypoint/db-entrypoint.sh"]
+    volumes:
+      - db_home:/var/lib/postgresql/data
+      - ../movie-db:/var/lib/postgresql/movie
+      - ./db-entrypoint:/db-entrypoint
+    depends_on:
+      - db
+
   superset:
-    env_file: docker/.env-non-dev
+    env_file: docker/.env
     image: *superset-image
-    container_name: superset_app
     command: ["/app/docker/docker-bootstrap.sh", "app-gunicorn"]
     user: "root"
     restart: unless-stopped
-    ports:
-      - 8088:8088
     depends_on: *superset-depends-on
     volumes: *superset-volumes
 
   superset-init:
     image: *superset-image
-    container_name: superset_init
     command: ["/app/docker/docker-init.sh"]
-    env_file: docker/.env-non-dev
+    env_file: docker/.env
     depends_on: *superset-depends-on
     user: "root"
     volumes: *superset-volumes
@@ -66,9 +71,8 @@ services:
 
   superset-worker:
     image: *superset-image
-    container_name: superset_worker
     command: ["/app/docker/docker-bootstrap.sh", "worker"]
-    env_file: docker/.env-non-dev
+    env_file: docker/.env
     restart: unless-stopped
     depends_on: *superset-depends-on
     user: "root"
@@ -78,9 +82,8 @@ services:
 
   superset-worker-beat:
     image: *superset-image
-    container_name: superset_worker_beat
     command: ["/app/docker/docker-bootstrap.sh", "beat"]
-    env_file: docker/.env-non-dev
+    env_file: docker/.env
     restart: unless-stopped
     depends_on: *superset-depends-on
     user: "root"
